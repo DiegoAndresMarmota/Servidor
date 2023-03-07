@@ -11,6 +11,12 @@ class Server {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cors());
         this.app.use(morgan('dev'));
+        ///Ruta
+        this.app.get('/api/welcome', (req, res) => {
+            res.status(200).json({
+                message: 'Welcome to the API Node'
+            });
+        });
         this.listen();
     }
 
