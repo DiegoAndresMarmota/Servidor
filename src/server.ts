@@ -3,6 +3,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { UserRouter } from './router/user.router';
 import { ConfigServer } from './config/config';
+import { DataSource } from "typeorm";
+import "reflect-metadata";
 
 class Server extends ConfigServer {
     public app: express.Application = express();
@@ -12,6 +14,9 @@ class Server extends ConfigServer {
         super();
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
+
+        this.dbConnect()
+
         this.app.use(cors());
         this.app.use(morgan('dev'));
         
@@ -21,6 +26,10 @@ class Server extends ConfigServer {
 
     routers(): Array<express.Router> {
         return [ new UserRouter().router];
+    }
+
+    async dbConnect(): Promise<DataSource> {
+        return await new DataSource(this.typeORMConfig).initialize();
     }
 
     public listen() {
